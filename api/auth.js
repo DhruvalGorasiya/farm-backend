@@ -53,8 +53,8 @@ app.post("/sign_up", async (req, res) => {
       .save()
       .then(async (data) => {
         await OtpModel.updateOne(
-          { email: email },
-          { email: email, otp: bcrypt.hashSync(otp.toString(), 10) },
+          { email: req.body.email },
+          { email: req.body.email, otp: bcrypt.hashSync(otp.toString(), 10) },
           { upsert: true }
         )
           .then((otpData) => {
@@ -70,7 +70,7 @@ app.post("/sign_up", async (req, res) => {
                   succes: true,
                   message: "Otp Send on your email",
                   data: {
-                    userId: data.id,
+                    email: req.body.email,
                   },
                 });
               }
@@ -87,6 +87,7 @@ app.post("/sign_up", async (req, res) => {
           });
       })
       .catch((fail) => {
+        console.log(fail);
         if (fail) {
           if (fail.name === "MongoServerError" && fail.code === 11000) {
             if (fail.keyValue.email) {
