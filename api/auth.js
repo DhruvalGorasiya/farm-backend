@@ -69,6 +69,7 @@ app.post("/sign_up", async (req, res) => {
           data: {
             id: data.id,
             email: data.email,
+            userName: data.userName,
             phone: data.phone,
             token: token,
           },
@@ -150,6 +151,7 @@ app.post("/login", async (req, res) => {
           message: "User not found",
         });
       } else {
+        console.log([data.id, data.email, data.phone]);
         bcrypt.compare(
           req.body.password,
           data[0].password,
@@ -176,9 +178,9 @@ app.post("/login", async (req, res) => {
                 status: true,
                 message: "User login successfully",
                 data: {
-                  id: data.id,
-                  email: data.email,
-                  phone: data.phone,
+                  id: data[0].id,
+                  email: data[0].email,
+                  phone: data[0].phone,
                   token: token,
                 },
               });
